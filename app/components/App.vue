@@ -6,7 +6,9 @@
             <Label class="estimated-wait" :text="estimatedWait" />
             <TextField class="input" autocorrect="false" hint="Name" text="" returnKeyType="done"/>
             <TextField class="input" autocorrect="false" hint="# of Customers" text="" returnKeyType="send"/> 
+            <Button text="Submit" @tap="setActive" class="btn btn-primary btn-active" />
             <Label class="current-date" :text="timeNow" col="0" row="0"/>
+            <Label v-if="showWaitId" class="wait-id" :text="waitId" />
         </StackLayout>
     </Page>
 </template>
@@ -18,6 +20,7 @@
     text-align: center;
     padding: 50px;
 }
+
 .header {
     text-transform: capitalize;
     margin-bottom: 20px;
@@ -69,6 +72,15 @@ function getCurrentDateString() {
   return `${currentMonth} ${currentDate}`;
 }
 
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getUserID() {
+    // reach out to API to grab user checkin ID
+    return getRandomInt(0, 200);
+}
+
 function getEstimatedWaitTime() {
     // get total people waiting from API
     // estimated it based on time (breakfast/lunch/dinner)
@@ -81,7 +93,14 @@ export default {
       msg: "Please sign in",
       timeNow: getCurrentDateString(),
       estimatedWait: 'Estimated wait time: ' + getEstimatedWaitTime() + 'min',
+      waitId: 'You are # ' + getUserID(),
+      showWaitId: false,
     };
+  },
+  methods: {
+      setActive() {
+          this.$data.showWaitId = true;
+      }
   }
 };
 </script>
